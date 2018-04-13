@@ -1,3 +1,7 @@
+## Terraform Package Lambda
+
+This module runs `npm install --production` in an isolated directory and `zip`'s the result in preparation for upload to AWS Lambda.
+
 ## Usage
 
 Assuming a file structure like:
