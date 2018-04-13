@@ -2,6 +2,10 @@
 
 This module runs `npm install --production` in an isolated directory and `zip`'s the result in preparation for upload to AWS Lambda.
 
+## Dependencies
+
+The build script requires [`jq`](https://github.com/stedolan/jq/wiki/Installation) to be installed on your system, as well as [`npm`](https://www.npmjs.com/get-npm).
+
 ## Usage
 
 Assuming a file structure like:
