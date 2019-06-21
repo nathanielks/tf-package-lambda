@@ -22,7 +22,8 @@ NPM_PROGRESS="$(npm get progress)"
 
 cd "${BUILD_DIR}" \
   && npm set progress=false \
-  && npm install --production --loglevel=error > "${BUILD_DIR}/npm-error.log" \
-  && npm set progress="${NPM_PROGRESS}"
+  && npm install --production --loglevel=error > /dev/null \
+  && npm set progress="${NPM_PROGRESS}" \
+  && rm "${BUILD_DIR}/package-lock.json"
 
 jq -n --arg build_dir "$BUILD_DIR" '{"packaged_dir":$build_dir}'
