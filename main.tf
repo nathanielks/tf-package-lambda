@@ -3,6 +3,9 @@ variable "source_dir" {
 }
 
 variable "build_dir" {
+  # Note: this has to remain required. At the time of writing, using a random_*
+  # resource will not work because the random resource won't be created until
+  # apply time, which will cause initial plans to fail.
   description = "One will be created with a random name if omitted."
 }
 
