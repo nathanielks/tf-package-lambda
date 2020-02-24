@@ -25,7 +25,6 @@ module "lambda_zip" {
   source = "github.com/nathanielks/tf-package-lambda"
 
   source_dir  = "${path.module}/files/lambda"
-  build_dir   = "/tmp/lambda-function"
   output_path = "${path.module}/files/packaged.zip"
 }
 ```
@@ -39,7 +38,6 @@ module "lambda_zip" {
   source = "github.com/nathanielks/tf-package-lambda"
 
   source_dir  = "${path.module}/files/lambda"
-  build_dir   = "/tmp/lambda-function"
   output_path = "${path.module}/files/packaged.zip"
 }
 
