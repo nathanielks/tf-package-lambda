@@ -18,7 +18,7 @@ data "external" "packaging_script" {
 
   query = {
     source_dir = var.source_dir
-    build_dir  = local.build_dir
+    build_dir  = var.build_dir
   }
 }
 
