@@ -3,15 +3,12 @@ variable "source_dir" {
 }
 
 variable "build_dir" {
-  description = "Optional; An ephemeral directory to perform the builds in. One will be created with a random name if omitted."
-  default     = ""
+  description = "One will be created with a random name if omitted."
 }
 
 variable "output_path" {
   description = "Where to output the zip package to"
 }
-
-resource "random_uuid" "build_dir" {}
 
 locals {
   build_dir = coalesce(var.build_dir, format("/tmp/%s", random_uuid.build_dir.result))
