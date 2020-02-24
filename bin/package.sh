@@ -16,11 +16,12 @@ eval "$(jq -r '@sh "SOURCE_DIR=\(.source_dir) BUILD_DIR=\(.build_dir)"')"
 
 SOURCE_DIR="${SOURCE_DIR/#\~/$HOME}"
 BUILD_DIR="${BUILD_DIR/#\~/$HOME}"
+
+mkdir -p "${BUILD_DIR}"
+
 rsync -a --delete --exclude 'node_modules' "${SOURCE_DIR}/" "${BUILD_DIR}/" > /dev/null
 
 NPM_PROGRESS="$(npm get progress)"
-
-mkdir -p "${BUILD_DIR}"
 
 cd "${BUILD_DIR}" \
   && npm set progress=false \
