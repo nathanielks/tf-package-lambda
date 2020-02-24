@@ -20,6 +20,8 @@ rsync -a --delete --exclude 'node_modules' "${SOURCE_DIR}/" "${BUILD_DIR}/" > /d
 
 NPM_PROGRESS="$(npm get progress)"
 
+mkdir -p "${BUILD_DIR}"
+
 cd "${BUILD_DIR}" \
   && npm set progress=false \
   && npm install --production --loglevel=error > /dev/null \
