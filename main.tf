@@ -13,10 +13,6 @@ variable "output_path" {
   description = "Where to output the zip package to"
 }
 
-locals {
-  build_dir = coalesce(var.build_dir, format("/tmp/%s", random_uuid.build_dir.result))
-}
-
 data "external" "packaging_script" {
   program = ["bash", "${path.module}/bin/package.sh"]
 
