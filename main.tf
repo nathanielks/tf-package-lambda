@@ -11,13 +11,7 @@ variable "output_path" {
   description = "Where to output the zip package to"
 }
 
-resource "random_uuid" "build_dir" {
-  keepers = {
-    source_dir  = var.source_dir
-    output_path = var.output_path
-  }
-
-}
+resource "random_uuid" "build_dir" {}
 
 locals {
   build_dir = coalesce(var.build_dir, format("/tmp/%s", random_uuid.build_dir.result))
