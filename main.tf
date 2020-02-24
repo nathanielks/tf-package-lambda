@@ -3,11 +3,24 @@ variable "source_dir" {
 }
 
 variable "build_dir" {
-  description = "An ephemeral directory to perform the builds in."
+  description = "Optional; An ephemeral directory to perform the builds in. One will be created with a random name if omitted."
+  default     = ""
 }
 
 variable "output_path" {
   description = "Where to output the zip package to"
+}
+
+resource "random_uuid" "build_dir" {
+  keepers = {
+    source_dir  = var.source_dir
+    output_path = var.output_path
+  }
+
+}
+
+locals {
+  build_dir = coalesce(var.build_dir, format("/tmp/%s", random_uuid.build_dir.result))
 }
 
 data "external" "packaging_script" {
@@ -15,7 +28,7 @@ data "external" "packaging_script" {
 
   query = {
     source_dir = var.source_dir
-    build_dir  = var.build_dir
+    build_dir  = local.build_dir
   }
 }
 
