@@ -28,6 +28,7 @@ cd "${BUILD_DIR}"
 npm ci --loglevel=error > /dev/null
 
 chmod -R 0755 .
+[[ -d node_modules/.bin ]] && chmod -R 0777 node_modules/.bin
 
 find * -print0 | \
   xargs -0 touch -a -m -t 203801181205.09
