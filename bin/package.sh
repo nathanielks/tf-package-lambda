@@ -23,10 +23,24 @@ rsync -a --delete --exclude 'node_modules' "${SOURCE_DIR}/" "${BUILD_DIR}/" > /d
 
 NPM_PROGRESS="$(npm get progress)"
 
-cd "${BUILD_DIR}" \
-  && npm set progress=false \
+cd "${BUILD_DIR}"
+
+npm set progress=false \
   && npm install --production --loglevel=error > /dev/null \
   && npm set progress="${NPM_PROGRESS}" \
   && rm -f "${BUILD_DIR}/package-lock.json"
+
+chmod -R 0755 .
+
+find * -print0 | \
+  xargs -0 touch -a -m -t 203801181205.09
+
+# npm adds the absolute file path to the installed npm modules' package.json.
+# This will remove those paths in order to make builds deterministic. See this
+# package for more info:
+# https://www.npmjs.com/package/removeNPMAbsolutePaths
+# https://github.com/npm/npm/issues/10393
+
+npx removeNPMAbsolutePaths "${BUILD_DIR}"
 
 jq -n --arg build_dir "$BUILD_DIR" '{"packaged_dir":$build_dir}'
