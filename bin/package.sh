@@ -25,10 +25,7 @@ NPM_PROGRESS="$(npm get progress)"
 
 cd "${BUILD_DIR}"
 
-npm set progress=false \
-  && npm install --production --loglevel=error > /dev/null \
-  && npm set progress="${NPM_PROGRESS}" \
-  && rm -f "${BUILD_DIR}/package-lock.json"
+npm ci --loglevel=error > /dev/null
 
 chmod -R 0755 .
 
