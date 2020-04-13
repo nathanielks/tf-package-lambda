@@ -2,6 +2,8 @@
 version: 2.1
 jobs:
   build:
+    environment:
+      PATH: "$HOME/.linuxbrew/bin:$PATH"
     machine:
       image: ubuntu-1604:201903-01
     steps:
@@ -12,25 +14,17 @@ jobs:
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)";
       - run:
           name: Install Terraform
-          environment:
-            PATH: "$HOME/.linuxbrew/bin:$PATH"
           command: |
             brew install terraform
       - run:
           name: Install project dependencies
-          environment:
-            PATH: "$HOME/.linuxbrew/bin:$PATH"
           command: |
             make deps
       - run:
           name: Prepare test
-          environment:
-            PATH: "$HOME/.linuxbrew/bin:$PATH"
           command: |
             make test-prep
       - run:
           name: Run tests
-          environment:
-            PATH: "$HOME/.linuxbrew/bin:$PATH"
           command: |
             make test-all
