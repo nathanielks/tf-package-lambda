@@ -1,5 +1,7 @@
 ---
 version: 2.1
+orbs:
+  node: circleci/node@2.0.1
 jobs:
   build:
     machine:
@@ -14,7 +16,7 @@ jobs:
           name: Install Terraform
           command: |
             eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-            brew install terraform
+            brew install terraform node@12
       - run:
           name: Install project dependencies
           command: |
