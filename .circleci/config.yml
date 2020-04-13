@@ -4,6 +4,8 @@ orbs:
   node: circleci/node@2.0.1
 jobs:
   build:
+    environment:
+      BASH_ENV: ~/.bashrc
     machine:
       image: ubuntu-1604:201903-01
     steps:
@@ -12,30 +14,22 @@ jobs:
           name: Install Homebrew
           command: |
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)";
+            echo 'eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)' >> $BASH_ENV
       - run:
           name: Install Terraform
           command: |
-            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             brew install terraform node@12
             brew link --force --overwrite node@12
+            echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/node@12/bin:$PATH"' >> $BASH_ENV
       - run:
           name: Install project dependencies
-          environment:
-            PATH: "/home/linuxbrew/.linuxbrew/opt/node@12/bin:$PATH"
           command: |
-            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             make deps
       - run:
           name: Prepare test
-          environment:
-            PATH: "/home/linuxbrew/.linuxbrew/opt/node@12/bin:$PATH"
           command: |
-            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             make test-prep
       - run:
           name: Run tests
-          environment:
-            PATH: "/home/linuxbrew/.linuxbrew/opt/node@12/bin:$PATH"
           command: |
-            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             make test-all
