@@ -17,7 +17,6 @@ jobs:
           environment:
             PATH: "/home/linuxbrew/.linuxbrew/bin:PATH"
           command: |
-            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             brew install terraform node@12
             brew link --force --overwrite node@12
       - run:
@@ -25,19 +24,16 @@ jobs:
           environment:
             PATH: "/home/linuxbrew/.linuxbrew/opt/node@12/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"
           command: |
-            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             make deps
       - run:
           name: Prepare test
           environment:
             PATH: "/home/linuxbrew/.linuxbrew/opt/node@12/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"
           command: |
-            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             make test-prep
       - run:
           name: Run tests
           environment:
             PATH: "/home/linuxbrew/.linuxbrew/opt/node@12/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"
           command: |
-            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             make test-all
