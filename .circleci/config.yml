@@ -2,8 +2,6 @@
 version: 2.1
 jobs:
   build:
-    environment:
-      PATH: "$HOME/.linuxbrew/bin:$PATH"
     machine:
       image: ubuntu-1604:201903-01
     steps:
@@ -15,16 +13,20 @@ jobs:
       - run:
           name: Install Terraform
           command: |
+            export PATH="$HOME/.linuxbrew/bin:$PATH"
             brew install terraform
       - run:
           name: Install project dependencies
           command: |
+            export PATH="$HOME/.linuxbrew/bin:$PATH"
             make deps
       - run:
           name: Prepare test
           command: |
+            export PATH="$HOME/.linuxbrew/bin:$PATH"
             make test-prep
       - run:
           name: Run tests
           command: |
+            export PATH="$HOME/.linuxbrew/bin:$PATH"
             make test-all
