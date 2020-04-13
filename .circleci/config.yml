@@ -10,21 +10,27 @@ jobs:
           name: Install Homebrew
           command: |
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)";
-            echo 'eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)' >> /home/circleci/.bash_profile;
-            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
       - run:
           name: Install dependencies
+          environment:
+            PATH: "$HOME/.linuxbrew/bin:$PATH"
           command: |
             sudo apt-get install build-essential && brew install terraform
       - run:
           name: Install project dependencies
+          environment:
+            PATH: "$HOME/.linuxbrew/bin:$PATH"
           command: |
             make deps
       - run:
           name: Prepare test
+          environment:
+            PATH: "$HOME/.linuxbrew/bin:$PATH"
           command: |
             make test-prep
       - run:
           name: Run tests
+          environment:
+            PATH: "$HOME/.linuxbrew/bin:$PATH"
           command: |
             make test-all
