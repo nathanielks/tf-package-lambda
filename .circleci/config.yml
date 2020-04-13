@@ -11,11 +11,11 @@ jobs:
           command: |
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)";
       - run:
-          name: Install dependencies
+          name: Install Terraform
           environment:
             PATH: "$HOME/.linuxbrew/bin:$PATH"
           command: |
-            sudo apt-get install build-essential && brew install terraform
+            brew install terraform
       - run:
           name: Install project dependencies
           environment:
