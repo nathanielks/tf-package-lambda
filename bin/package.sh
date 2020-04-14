@@ -68,8 +68,10 @@ export SHELLOPTS
   # force MacOS to change the symlinks' permissions to 777. Linux has 777 on
   # symlinks by default.
   # https://unix.stackexchange.com/a/87202/199864
-  if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [[ "$OSTYPE" == "darwin"* ]] && [[ -d node_modules/.bin ]]; then
     find node_modules/.bin | xargs /bin/chmod -h 777
+  else
+    echo "Not a MacOS system, or node_modules/.bin not found"
   fi
 
   # find * -print0 | \
