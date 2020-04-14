@@ -63,7 +63,14 @@ export SHELLOPTS
   npm ci --loglevel=error
 
   chmod -R 0755 .
-  chmod -Rf 0777 node_modules/.bin || echo "no node_modules/.bin"
+  # node_modules/.bin will be populated with symlinks to executables. Because
+  # Linux and MacOS (FreeBSD) treat symlinks differently, we have to manually
+  # force MacOS to change the symlinks' permissions to 777. Linux has 777 on
+  # symlinks by default.
+  # https://unix.stackexchange.com/a/87202/199864
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    find node_modules/.bin | xargs /bin/chmod -h 777
+  fi
 
   # find * -print0 | \
     # xargs -0 touch -a -m -t 203801181205.09
