@@ -17,8 +17,9 @@ data "external" "packaging_script" {
   program = ["bash", "${path.module}/bin/package.sh"]
 
   query = {
-    source_dir = var.source_dir
-    build_dir  = var.build_dir
+    source_dir  = var.source_dir
+    build_dir   = var.build_dir
+    output_path = var.output_path
   }
 }
 
@@ -33,14 +34,14 @@ output "zip_file" {
 }
 
 output "output_sha" {
-  value = data.archive_file.zip.output_sha
+  value = filesha1(data.external.packaging_script.result.output_path)
 }
 
 output "output_base64sha256" {
-  value = data.archive_file.zip.output_base64sha256
+  value = filebase64sha256(data.external.packaging_script.result.output_path)
 }
 
 output "output_md5" {
-  value = data.archive_file.zip.output_md5
+  value = filemd5(data.external.packaging_script.result.output_path)
 }
 
