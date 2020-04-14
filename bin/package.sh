@@ -12,6 +12,7 @@ LOGFILE="/tmp/$SCRIPTNAME-$MD5-logs"
 exec 19> $LOGFILE
 export BASH_XTRACEFD="19"
 
+set -x
 # Record args to file for debugging
 echo ${JSON} | tee $ARGSFILE > /dev/null
 
@@ -30,8 +31,8 @@ eval "$(echo $JSON | jq -r '@sh "SOURCE_DIR=\(.source_dir) BUILD_DIR=\(.build_di
 
 # Note we execute the build script portion inside of parenthesis to launch it
 # all in a subshell to make redirecting stdout and stderr much easier.
+export SHELLOPTS
 (
-  set -x
   if ! command -v jq >/dev/null 2>&1; then
     >&2 echo "jq is not installed, cannot package javascript project. Please install jq to proceed."
     exit 1
@@ -62,7 +63,7 @@ eval "$(echo $JSON | jq -r '@sh "SOURCE_DIR=\(.source_dir) BUILD_DIR=\(.build_di
   npm ci --loglevel=error
 
   chmod -R 0755 .
-  [[ -d node_modules/.bin ]] && chmod -R 0777 node_modules/.bin
+  chmod -Rf 0777 node_modules/.bin || echo "no node_modules/.bin"
 
   # find * -print0 | \
     # xargs -0 touch -a -m -t 203801181205.09
@@ -76,7 +77,7 @@ eval "$(echo $JSON | jq -r '@sh "SOURCE_DIR=\(.source_dir) BUILD_DIR=\(.build_di
   npx removeNPMAbsolutePaths "${BUILD_DIR}"
 
   deterministic-zip $OUTPUT_PATH "${BUILD_DIR}"
-) > $LOGFILE 2> $LOGFILE
+) >/dev/null 2> $LOGFILE
 
 jq -n \
   --arg build_dir "$BUILD_DIR" \
