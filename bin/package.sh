@@ -9,8 +9,8 @@ ARGSFILE="/tmp/$SCRIPTNAME-$MD5-args"
 LOGFILE="/tmp/$SCRIPTNAME-$MD5-logs"
 # exec > >(tee -ia $LOGFILE)
 # exec 2> $LOGFILE
-exec 3> $LOGFILE
-export BASH_XTRACEFD="3"
+exec 19> $LOGFILE
+export BASH_XTRACEFD="19"
 
 # Record args to file for debugging
 echo ${JSON} | tee $ARGSFILE > /dev/null
@@ -31,6 +31,7 @@ eval "$(echo $JSON | jq -r '@sh "SOURCE_DIR=\(.source_dir) BUILD_DIR=\(.build_di
 # Note we execute the build script portion inside of parenthesis to launch it
 # all in a subshell to make redirecting stdout and stderr much easier.
 (
+  set -x
   if ! command -v jq >/dev/null 2>&1; then
     >&2 echo "jq is not installed, cannot package javascript project. Please install jq to proceed."
     exit 1
