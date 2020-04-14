@@ -45,9 +45,9 @@ chmod -R 0755 .
 # https://www.npmjs.com/package/removeNPMAbsolutePaths
 # https://github.com/npm/npm/issues/10393
 
-npx removeNPMAbsolutePaths "${BUILD_DIR}" >/dev/null 2>&1
+npx removeNPMAbsolutePaths "${BUILD_DIR}" >/dev/null
 
-deterministic-zip $OUTPUT_PATH "${BUILD_DIR}" >/dev/null 2>&1
+deterministic-zip $OUTPUT_PATH "${BUILD_DIR}" >/dev/null
 
 jq -n \
   --arg build_dir "$BUILD_DIR" \
