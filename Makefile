@@ -14,5 +14,4 @@ test-prep:
 test-all:
 	cd test/; \
 		echo Expecting: $(EXPECTED);\
-		RESULT=$$(terraform output -json 'module');\
-		[[ "$$RESULT" == $(EXPECTED) ]] && echo Test passed || ( echo 'Resulting output did not match expected output.' && exit 1)
+		bash -c "RESULT=$$(terraform output -json 'module'); [[ \"$$RESULT\" == $(EXPECTED) ]] && echo Test passed || ( echo 'Resulting output did not match expected output.' && exit 1)"
