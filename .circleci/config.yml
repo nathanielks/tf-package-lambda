@@ -33,10 +33,6 @@ jobs:
           name: Install jq and other deps
           command: sudo apt-get install jq rsync
       - run:
-          name: Prepare test
-          command: |
-            make test-prep
-      - run:
           name: Run tests
           command: |
             make test-all
