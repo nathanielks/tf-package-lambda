@@ -1,10 +1,17 @@
 ## Terraform Package Lambda
 
-This module runs `npm install --production` in an isolated directory and `zip`'s the result in preparation for upload to AWS Lambda.
+This module runs `npm ci` in an isolated directory and `zip`'s the result in preparation for upload to AWS Lambda. The resulting zip file is produced in a deterministic way that will be consistent across multiple Nix platforms.
 
 ## Dependencies
 
-The build script requires [`jq`](https://github.com/stedolan/jq/wiki/Installation) to be installed on your system, as well as [`npm`](https://www.npmjs.com/get-npm).
+Install its dependencies:
+
+```
+brew tap orf/brew
+brew install deterministic-zip jq
+```
+
+Additionally, you will need `npm` and `rsync`. It's assumed you have these already on your system.
 
 ## Usage
 
