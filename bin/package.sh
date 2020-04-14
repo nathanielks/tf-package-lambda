@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -E
 
 JSON=$(jq -rc)
 SCRIPTNAME="$(basename ${0})"
@@ -6,23 +7,30 @@ MD5="$(echo $JSON | md5sum | cut -d ' ' -f 1)"
 
 ARGSFILE="/tmp/$SCRIPTNAME-$MD5-args"
 LOGFILE="/tmp/$SCRIPTNAME-$MD5-logs"
-exec   > >(tee -ia $LOGFILE)
-exec  2> >(tee -ia $LOGFILE >& 2)
-exec 19> $LOGFILE
+exec > >(tee -ia $LOGFILE)
+exec 2> >(tee -ia $LOGFILE >& 2)
+exec 3> $LOGFILE
 
-export BASH_XTRACEFD="19"
+export BASH_XTRACEFD="3"
 
 # Record args to file for debugging
-echo ${JSON} | tee $ARGSFILE
+echo ${JSON} | tee $ARGSFILE > /dev/null
 
-function error_handler(){
-  echo "A fatal error occurred, closing..."
+trap 'catch $? $LINENO' ERR
+catch() {
+  echo "A fatal error occurred, showing error logs..."
+  echo "Error $1 occurred on $2"
   echo "Args file: $ARGSFILE"
+  echo "Log file: $LOGFILE"
   >&2 cat "$LOGFILE"
 }
 
-trap error_handler ERR
-set -e
+function always(){
+  echo exited >&3
+}
+
+trap always EXIT
+set -eu
 
 if ! command -v jq >/dev/null 2>&1; then
   >&2 echo "jq is not installed, cannot package javascript project. Please install jq to proceed."
@@ -45,18 +53,18 @@ SOURCE_DIR="${SOURCE_DIR/#\~/$HOME}"
 BUILD_DIR="${BUILD_DIR/#\~/$HOME}"
 OUTPUT_PATH="${OUTPUT_PATH/#\~/$HOME}"
 
-mkdir -p "${BUILD_DIR}" "$(dirname $OUTPUT_PATH)"
+mkdir -p "${BUILD_DIR}" "$(dirname $OUTPUT_PATH)" >&3 2>&1
 
-rsync -a --delete --exclude 'node_modules' "${SOURCE_DIR}/" "${BUILD_DIR}/" > /dev/null
+rsync -a --delete --exclude 'node_modules' "${SOURCE_DIR}/" "${BUILD_DIR}/" >&3 2>&1
 
 NPM_PROGRESS="$(npm get progress)"
 
 cd "${BUILD_DIR}"
 
-npm ci --loglevel=error > /dev/null
+npm ci --loglevel=error >&3 2>&1
 
-chmod -R 0755 .
-[[ -d node_modules/.bin ]] && chmod -R 0777 node_modules/.bin
+chmod -R 0755 . >&3 2>&1
+[[ -d node_modules/.bin ]] && chmod -R 0777 node_modules/.bin >&3 2>&1
 
 # find * -print0 | \
   # xargs -0 touch -a -m -t 203801181205.09
@@ -67,9 +75,9 @@ chmod -R 0755 .
 # https://www.npmjs.com/package/removeNPMAbsolutePaths
 # https://github.com/npm/npm/issues/10393
 
-npx removeNPMAbsolutePaths "${BUILD_DIR}" >/dev/null
+npx removeNPMAbsolutePaths "${BUILD_DIR}" >&3 2>&1
 
-deterministic-zip $OUTPUT_PATH "${BUILD_DIR}" >/dev/null
+deterministic-zip $OUTPUT_PATH "${BUILD_DIR}" >&3 2>&1
 
 jq -n \
   --arg build_dir "$BUILD_DIR" \
