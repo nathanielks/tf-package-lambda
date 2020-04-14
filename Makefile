@@ -4,7 +4,7 @@ deps :
 	brew tap orf/brew
 	brew install deterministic-zip jq
 
-EXPECTED = '{"output_base64sha256":"2neNhsuqJrlSIiHmrgN7mAOMZrcGxOJnUTH150aOb/8=","output_md5":"c38207dab3869026a079a498d55ea7e4","output_sha":"91575e22db67f898778d8aabb9182afb641b967a","zip_file":"/tmp/terraform-package-lambda.zip"}'
+EXPECTED = '{"output_base64sha256":"amgGT29heD729wotF4LYvaK7VfzTyLpptjSvBQA1uOA=","output_md5":"f77a0da7cb505656eb7a0809c76afbe2","output_sha":"1f2f31ab9518828db01645632509184864496d7a","zip_file":"/tmp/terraform-package-lambda.zip"}'
 
 test-all:
 	cd test/; \
