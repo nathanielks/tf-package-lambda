@@ -2,27 +2,36 @@
 version: 2.1
 jobs:
   build:
-    environment:
-      BASH_ENV: ~/.bashrc
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: cimg/base:2020.01
     steps:
       - checkout
       - run:
-          name: Install Homebrew
+          name: Install Node 12
           command: |
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)";
-            echo 'eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)' >> $BASH_ENV
+            curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -;
+            sudo apt-get install -y nodejs
+      - run:
+          name: Node Versions
+          command: node --version; npm --version;
       - run:
           name: Install Terraform
           command: |
-            brew install terraform node@12
-            brew link --force --overwrite node@12
-            echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/node@12/bin:$PATH"' >> $BASH_ENV
+            curl -fsSL https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip > /tmp/tf.zip;
+            cd /tmp;
+            unzip /tmp/tf.zip;
+            sudo mv /tmp/terraform /usr/local/bin/terraform;
+            terraform -v
       - run:
-          name: Install project dependencies
+          name: Install deterministic-zip
           command: |
-            make deps
+            curl -fsSL https://github.com/orf/deterministic-zip/releases/download/v0.0.4/deterministic-zip-Linux-x86_64.tar.gz > /tmp/dz.tar.gz;
+            cd /tmp;
+            tar xzvf /tmp/dz.tar.gz;
+            sudo mv /tmp/deterministic-zip /usr/local/bin/deterministic-zip;
+      - run:
+          name: Install jq and other deps
+          command: sudo apt-get install jq rsync
       - run:
           name: Prepare test
           command: |
