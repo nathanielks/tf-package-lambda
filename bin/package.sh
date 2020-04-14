@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-JSON=$(jq -rc)
+eval $(jq -rc '@sh "JSON=\(. | @json)"')
 SCRIPTNAME="$(basename ${0})"
 MD5="$(echo $JSON | md5sum | cut -d ' ' -f 1)"
 
