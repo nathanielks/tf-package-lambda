@@ -8,7 +8,7 @@ Install its dependencies:
 
 ```
 brew tap orf/brew
-brew install deterministic-zip jq
+brew install deterministic-zip jq coreutils
 ```
 
 Additionally, you will need `npm` and `rsync`. It's assumed you have these already on your system.
