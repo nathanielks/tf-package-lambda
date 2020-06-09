@@ -21,12 +21,12 @@ export PATH="$BIN_DIR/binaries/linux:$PATH"
 
 # if ! command -v jq >/dev/null 2>&1; then
 # if ! [[ -L /tmp/bin/jq ]]; then
-  ln -sf "$BIN_DIR/binaries/linux/jq" /tmp/bin/jq
+  # ln -sf "$BIN_DIR/binaries/linux/jq" /tmp/bin/jq
 # fi
 
 # if ! command -v deterministic-zip >/dev/null 2>&1; then
 # if ! [[ -L /tmp/bin/deterministic-zip ]]; then
-  ln -sf "$BIN_DIR/binaries/linux/deterministic-zip" /tmp/bin/deterministic-zip
+  # ln -sf "$BIN_DIR/binaries/linux/deterministic-zip" /tmp/bin/deterministic-zip
 # fi
 chmod +x $BIN_DIR/binaries/linux/*
 
