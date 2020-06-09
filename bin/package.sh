@@ -1,6 +1,29 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Add binaries shipped with module to path
+BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+mkdir -p /tmp/bin /tmp/lib
+export PATH="/tmp/bin:$PATH"
+
+if ! command -v npm >/dev/null 2>&1; then
+  # We make the symbolic link first to prevent other modules running this
+  # script from needing to decompress the archive
+  ln -sf /tmp/lib/node-v12.18.0-linux-x64/bin/npm /tmp/bin/npm
+  ln -sf /tmp/lib/node-v12.18.0-linux-x64/bin/node /tmp/bin/node
+  ln -sf /tmp/lib/node-v12.18.0-linux-x64/bin/npx /tmp/bin/npx
+  tar -xf "$BIN_DIR/archives/node-v12.18.0-linux-x64.tar.xz" -C "/tmp/lib"
+fi
+
+if ! command -v jq >/dev/null 2>&1; then
+  ln -sf "$BIN_DIR/binaries/linux/jq" /tmp/bin/jq
+fi
+
+if ! command -v deterministic-zip >/dev/null 2>&1; then
+  ln -sf "$BIN_DIR/binaries/linux/deterministic-zip" /tmp/bin/deterministic-zip
+fi
+
 eval $(jq -rc '@sh "JSON=\(. | @json)"')
 SCRIPTNAME="$(basename ${0})"
 MD5="$(echo $JSON | md5sum | cut -d ' ' -f 1)"
