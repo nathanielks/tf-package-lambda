@@ -4,31 +4,31 @@ set -Eeuo pipefail
 # Add binaries shipped with module to path
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-mkdir -p /tmp/bin /tmp/lib
-export PATH="/tmp/bin:$PATH"
+mkdir -p "$BIN_DIR/lib"
+export PATH="$BIN_DIR/binaries/linux:$PATH"
 
 # if ! command -v npm >/dev/null 2>&1; then
 # check if the symlink exists and otherwise install it. We check the presence
 # of the symlink instead of the command so other modules don't decompress
-if ! [[ -L /tmp/bin/npm ]]; then
+# if ! [[ -L /tmp/bin/npm ]]; then
   # We make the symbolic link first to prevent other modules running this
   # script from needing to decompress the archive
-  ln -sf /tmp/lib/node-v12.18.0-linux-x64/bin/npm /tmp/bin/npm
-  ln -sf /tmp/lib/node-v12.18.0-linux-x64/bin/node /tmp/bin/node
-  ln -sf /tmp/lib/node-v12.18.0-linux-x64/bin/npx /tmp/bin/npx
-  tar -xf "$BIN_DIR/archives/node-v12.18.0-linux-x64.tar.xz" -C "/tmp/lib"
-fi
+  tar -xf "$BIN_DIR/archives/node-v12.18.0-linux-x64.tar.xz" -C "$BIN_DIR/lib"
+  ln -sf "$BIN_DIR/lib/node-v12.18.0-linux-x64/bin/npm" "$BIN_DIR/binaries/linux/npm"
+  ln -sf "$BIN_DIR/lib/node-v12.18.0-linux-x64/bin/node" "$BIN_DIR/binaries/linux/node"
+  ln -sf "$BIN_DIR/lib/node-v12.18.0-linux-x64/bin/npx" "$BIN_DIR/binaries/linux/npx"
+# fi
 
 # if ! command -v jq >/dev/null 2>&1; then
-if ! [[ -L /tmp/bin/jq ]]; then
+# if ! [[ -L /tmp/bin/jq ]]; then
   ln -sf "$BIN_DIR/binaries/linux/jq" /tmp/bin/jq
-fi
+# fi
 
 # if ! command -v deterministic-zip >/dev/null 2>&1; then
-if ! [[ -L /tmp/bin/deterministic-zip ]]; then
+# if ! [[ -L /tmp/bin/deterministic-zip ]]; then
   ln -sf "$BIN_DIR/binaries/linux/deterministic-zip" /tmp/bin/deterministic-zip
-fi
-chmod +x /tmp/bin/*
+# fi
+chmod +x $BIN_DIR/binaries/linux/*
 
 
 eval $(jq -rc '@sh "JSON=\(. | @json)"')
