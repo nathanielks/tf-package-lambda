@@ -4,28 +4,20 @@ set -Eeuo pipefail
 # Add binaries shipped with module to path
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-mkdir -p "$BIN_DIR/lib" /tmp/lib
+mkdir -p "$BIN_DIR/lib"
 export PATH="$BIN_DIR/binaries/linux:$PATH"
-
-semaphore=/tmp/decompress-node-v12.18.0-linux-x64
-if ! [[ -d /tmp/lib/node-v12.18.0-linux-x64 ]]; then
-  touch $semaphore
-  tar -xf "$BIN_DIR/archives/node-v12.18.0-linux-x64.tar.xz" -C "/tmp/lib"
-  rm $semaphore
-fi
 
 # if ! command -v npm >/dev/null 2>&1; then
 # check if the symlink exists and otherwise install it. We check the presence
 # of the symlink instead of the command so other modules don't decompress
-
-# If the sempaphore exists, wait till it's complete
-while [[ -f $semaphore ]]
-do
-     sleep 1
-done
-ln -sf "/tmp/lib/node-v12.18.0-linux-x64/bin/npm" "$BIN_DIR/binaries/linux/npm"
-ln -sf "/tmp/lib/node-v12.18.0-linux-x64/bin/node" "$BIN_DIR/binaries/linux/node"
-ln -sf "/tmp/lib/node-v12.18.0-linux-x64/bin/npx" "$BIN_DIR/binaries/linux/npx"
+# if ! [[ -L /tmp/bin/npm ]]; then
+  # We make the symbolic link first to prevent other modules running this
+  # script from needing to decompress the archive
+  tar -xf "$BIN_DIR/archives/node-v12.18.0-linux-x64.tar.xz" -C "$BIN_DIR/lib"
+  ln -sf "$BIN_DIR/lib/node-v12.18.0-linux-x64/bin/npm" "$BIN_DIR/binaries/linux/npm"
+  ln -sf "$BIN_DIR/lib/node-v12.18.0-linux-x64/bin/node" "$BIN_DIR/binaries/linux/node"
+  ln -sf "$BIN_DIR/lib/node-v12.18.0-linux-x64/bin/npx" "$BIN_DIR/binaries/linux/npx"
+# fi
 
 # if ! command -v jq >/dev/null 2>&1; then
 # if ! [[ -L /tmp/bin/jq ]]; then
