@@ -7,7 +7,10 @@ BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 mkdir -p /tmp/bin /tmp/lib
 export PATH="/tmp/bin:$PATH"
 
-if ! command -v npm >/dev/null 2>&1; then
+# if ! command -v npm >/dev/null 2>&1; then
+# check if the symlink exists and otherwise install it. We check the presence
+# of the symlink instead of the command so other modules don't decompress
+if ! [[ -L /tmp/bin/npm ]]; then
   # We make the symbolic link first to prevent other modules running this
   # script from needing to decompress the archive
   ln -sf /tmp/lib/node-v12.18.0-linux-x64/bin/npm /tmp/bin/npm
@@ -16,13 +19,17 @@ if ! command -v npm >/dev/null 2>&1; then
   tar -xf "$BIN_DIR/archives/node-v12.18.0-linux-x64.tar.xz" -C "/tmp/lib"
 fi
 
-if ! command -v jq >/dev/null 2>&1; then
+# if ! command -v jq >/dev/null 2>&1; then
+if ! [[ -L /tmp/bin/jq ]]; then
   ln -sf "$BIN_DIR/binaries/linux/jq" /tmp/bin/jq
 fi
 
-if ! command -v deterministic-zip >/dev/null 2>&1; then
+# if ! command -v deterministic-zip >/dev/null 2>&1; then
+if ! [[ -L /tmp/bin/deterministic-zip ]]; then
   ln -sf "$BIN_DIR/binaries/linux/deterministic-zip" /tmp/bin/deterministic-zip
 fi
+chmod +x /tmp/bin/*
+
 
 eval $(jq -rc '@sh "JSON=\(. | @json)"')
 SCRIPTNAME="$(basename ${0})"
