@@ -5,7 +5,9 @@ set -Eeuo pipefail
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 mkdir -p "$BIN_DIR/lib"
-export PATH="$BIN_DIR/binaries/linux:$PATH"
+# Append binary path to the end so existing binaries can be used if present,
+# such as when performing local plans
+export PATH="$PATH:$BIN_DIR/binaries/linux"
 
 # if ! command -v npm >/dev/null 2>&1; then
 # check if the symlink exists and otherwise install it. We check the presence
