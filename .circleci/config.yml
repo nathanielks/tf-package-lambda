@@ -7,14 +7,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Node 12
-          command: |
-            curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -;
-            sudo apt-get install -y nodejs
-      - run:
-          name: Node Versions
-          command: node --version; npm --version;
-      - run:
           name: Install Terraform
           command: |
             curl -fsSL https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip > /tmp/tf.zip;
@@ -23,15 +15,8 @@ jobs:
             sudo mv /tmp/terraform /usr/local/bin/terraform;
             terraform -v
       - run:
-          name: Install deterministic-zip
-          command: |
-            curl -fsSL https://github.com/orf/deterministic-zip/releases/download/v0.0.4/deterministic-zip-Linux-x86_64.tar.gz > /tmp/dz.tar.gz;
-            cd /tmp;
-            tar xzvf /tmp/dz.tar.gz;
-            sudo mv /tmp/deterministic-zip /usr/local/bin/deterministic-zip;
-      - run:
           name: Install jq and other deps
-          command: sudo apt-get install jq rsync
+          command: sudo apt-get install rsync
       - run:
           name: Run tests
           command: |
