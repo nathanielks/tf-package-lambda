@@ -120,7 +120,14 @@ export SHELLOPTS
   deterministic-zip $OUTPUT_PATH "${BUILD_DIR}"
 ) >/dev/null 2> $LOGFILE
 
+md5="$(md5sum<$OUTPUT_PATH | cut -d' ' -f1)"
+sha1="$(sha1sum<$OUTPUT_PATH | cut -d' ' -f1)"
+base64sha256="$(openssl dgst -sha256 -binary $OUTPUT_PATH | openssl enc -base64)"
+
 jq -n \
   --arg build_dir "$BUILD_DIR" \
   --arg output_path "$OUTPUT_PATH" \
-  '{"packaged_dir":$build_dir, "output_path":$output_path}'
+  --arg md5 "$md5" \
+  --arg sha1 "$sha1" \
+  --arg base64sha256 "$base64sha256" \
+  '{"packaged_dir":$build_dir, "output_path":$output_path, "md5":$md5, "sha1":$sha1, "base64sha256":$base64sha256}'

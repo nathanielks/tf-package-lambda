@@ -23,25 +23,18 @@ data "external" "packaging_script" {
   }
 }
 
-data "archive_file" "zip" {
-  type        = "zip"
-  source_dir  = data.external.packaging_script.result.packaged_dir
-  output_path = var.output_path
-}
-
 output "zip_file" {
-  value = var.output_path
+  value = data.external.packaging_script.result.output_path
 }
 
 output "output_sha" {
-  value = filesha1(data.external.packaging_script.result.output_path)
+  value = data.external.packaging_script.result.sha1
 }
 
 output "output_base64sha256" {
-  value = filebase64sha256(data.external.packaging_script.result.output_path)
+  value = data.external.packaging_script.result.base64sha256
 }
 
 output "output_md5" {
-  value = filemd5(data.external.packaging_script.result.output_path)
+  value = data.external.packaging_script.result.md5
 }
-
