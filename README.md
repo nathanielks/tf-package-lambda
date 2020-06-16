@@ -1,10 +1,10 @@
 ## Terraform Package Lambda <img src="https://circleci.com/gh/nathanielks/terraform-package-lambda/tree/master.svg?style=svg&circle-token=40f7dffce792f6d56be198c82a7e5d31056a8aa0" alt="Build status">
 
-This module runs `npm ci` in an isolated directory and `zip`'s the result in preparation for upload to AWS Lambda. The resulting zip file is produced in a deterministic way that will be consistent across multiple Nix platforms.
+This module runs `npm ci` in an isolated directory and `zip`'s the result in preparation for upload to AWS Lambda. The resulting zip file is produced in a deterministic way that will be consistent across multiple Nix platforms. The module includes its dependencies so it can be executed within Terraform Cloud.
 
 ## Dependencies
 
-Install its dependencies:
+If executing this in an environment outside of Terraform Cloud or Ubuntu 18.04, install this module's dependencies:
 
 ```
 brew tap orf/brew
