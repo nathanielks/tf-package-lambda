@@ -17,6 +17,8 @@ jobs:
       - run:
           name: Install rsync
           command: sudo apt update; sudo apt install rsync
+          environment:
+            DEBIAN_FRONTEND: noninteractive
       - run:
           name: Run tests
           command: |
