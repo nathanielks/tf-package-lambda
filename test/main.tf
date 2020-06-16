@@ -1,4 +1,4 @@
-module "test" {
+module "lambda_src" {
   source = "../"
 
   source_dir  = "${path.module}/src"
@@ -6,6 +6,12 @@ module "test" {
   output_path = "/tmp/terraform-package-lambda.zip"
 }
 
-output "module" {
-  value = module.test
+# create a file so as to trigger changes in Terraform Cloud
+resource "local_file" "foo" {
+  content  = "foo!"
+  filename = "/tmp/foo.bar"
+}
+
+output "lambda_src" {
+  value = module.lambda_src
 }
