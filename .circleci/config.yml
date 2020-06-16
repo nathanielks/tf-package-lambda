@@ -16,9 +16,7 @@ jobs:
             terraform -v
       - run:
           name: Install rsync
-          command: sudo apt update; sudo apt install rsync
-          environment:
-            DEBIAN_FRONTEND: noninteractive
+          command: sudo apt update; sudo apt install --yes rsync
       - run:
           name: Run tests
           command: |
