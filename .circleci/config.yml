@@ -15,6 +15,9 @@ jobs:
             sudo mv /tmp/terraform /usr/local/bin/terraform;
             terraform -v
       - run:
+          name: Install jq and other deps
+          command: sudo apt-get install rsync
+      - run:
           name: Run tests
           command: |
             make test-all
