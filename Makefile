@@ -9,6 +9,6 @@ EXPECTED = '{"output_base64sha256":"RcVBIuZ4fgCmMc+IsN6OXrSqwEVb1V8PvS+tIu+FmoA=
 test-all:
 	cd test/; \
 		terraform init;\
-		terraform apply;\
+		terraform apply -auto-approve;\
 		echo Expecting: $(EXPECTED);\
 		bash -c "[[ \"$$(terraform output -json 'lambda_src')\" == $(EXPECTED) ]] && echo Test passed || ( echo 'Resulting output did not match expected output.' && exit 1)"
